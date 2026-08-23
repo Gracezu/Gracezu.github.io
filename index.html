@@ -3,14 +3,24 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gracezu — Projects</title>
+  <title>Grace (Zu Zu Cho) Oo — Projects</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <main class="container">
-    <header class="hero">
-      <h1 class="name">Gracezu</h1>
-      <p class="tagline">Software & Machine Learning Engineer</p>
+    <header class="hero" role="banner">
+      <!-- Full-width header image is set with CSS using assets/header.jpg -->
+      <div class="hero-overlay">
+        <div class="hero-content">
+          <!-- Avatar: falls back to avatar placeholder if image missing -->
+          <img class="avatar" src="assets/avatar.jpg" alt="Grace (Zu Zu Cho) Oo" />
+          <div class="hero-text">
+            <h1 class="name">Grace (Zu Zu Cho) Oo</h1>
+            <p class="tagline">Software &amp; Machine Learning Engineer</p>
+            <p class="social"><a id="linkedin-link" href="https://linkedin.com/zuzuchooo" target="_blank" rel="noopener">LinkedIn</a></p>
+          </div>
+        </div>
+      </div>
     </header>
 
     <section class="about">
@@ -34,26 +44,37 @@
   <script>
     // Default username (repository owner)
     const username = "Gracezu";
+    // Names to hide from the repo list (lowercase)
+    const hiddenRepos = ['gracezu.github.io', 'js-fizzbuzz-lagcc-001'];
 
     async function loadRepos() {
       const ul = document.getElementById('repo-list');
       ul.textContent = 'Loading repositories…';
       try {
-        const res = await fetch(`https://api.github.com/users/${username}/repos?per_page=100&sort=updated`);
+        const res = await fetch(`https://api.github.com/users/${username}/repos?per_page=200&sort=updated`);
         if (!res.ok) throw new Error('GitHub API error: ' + res.status);
         const repos = await res.json();
         if (!Array.isArray(repos) || repos.length === 0) {
           ul.textContent = 'No public repositories found.';
           return;
         }
-        ul.innerHTML = '';
-        // Optionally prioritize a repo named tech-energy-stock-forecasting
-        repos.sort((a,b) => {
+        // Filter out the hidden repositories by name (case-insensitive)
+        const filtered = repos.filter(r => !hiddenRepos.includes(r.name.toLowerCase()));
+
+        if (filtered.length === 0) {
+          ul.textContent = 'No public repositories to display.';
+          return;
+        }
+
+        // Prioritize tech-energy-stock-forecasting
+        filtered.sort((a,b) => {
           if (a.name === 'tech-energy-stock-forecasting') return -1;
           if (b.name === 'tech-energy-stock-forecasting') return 1;
           return new Date(b.updated_at) - new Date(a.updated_at);
         });
-        for (const r of repos) {
+
+        ul.innerHTML = '';
+        for (const r of filtered) {
           const li = document.createElement('li');
           li.innerHTML = `<a href="${r.html_url}" target="_blank" rel="noopener">${r.name}</a>
                           <div class="desc">${r.description ? r.description : ''}</div>`;
