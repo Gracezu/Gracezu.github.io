@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gracezu — Projects</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <header class="hero">
+      <h1 class="name">Gracezu</h1>
+      <p class="tagline">Software & Machine Learning Engineer</p>
+    </header>
+
+    <section class="about">
+      <h2>About</h2>
+      <p>
+        I’m a software and machine learning engineer who loves turning raw, chaotic data into sharp, high-performing intelligent models. Nothing gets me quite as pumped as cracking complex algorithms, training scalable architectures, and watching a freshly tuned model successfully accomplish accuracy. Whether I'm building end-to-end ML pipelines or engineering elegant software under the hood, I live for the process of transforming big ideas into clean, impactful tech. I’m always hunting for the next big challenge, the next tricky dataset, and new ways to push code to its absolute limit. Let’s build something incredible.
+      </p>
+    </section>
+
+    <section id="repos" class="repos">
+      <h2>Repositories</h2>
+      <p class="muted">Listing public repositories for <strong>Gracezu</strong>. Data fetched from GitHub.</p>
+      <ul id="repo-list">Loading repositories…</ul>
+    </section>
+
+    <footer class="foot">
+      <small>Site generated from your public GitHub repositories.</small>
+    </footer>
+  </main>
+
+  <script>
+    // Default username (repository owner)
+    const username = "Gracezu";
+
+    async function loadRepos() {
+      const ul = document.getElementById('repo-list');
+      ul.textContent = 'Loading repositories…';
+      try {
+        const res = await fetch(`https://api.github.com/users/${username}/repos?per_page=100&sort=updated`);
+        if (!res.ok) throw new Error('GitHub API error: ' + res.status);
+        const repos = await res.json();
+        if (!Array.isArray(repos) || repos.length === 0) {
+          ul.textContent = 'No public repositories found.';
+          return;
+        }
+        ul.innerHTML = '';
+        // Optionally prioritize a repo named tech-energy-stock-forecasting
+        repos.sort((a,b) => {
+          if (a.name === 'tech-energy-stock-forecasting') return -1;
+          if (b.name === 'tech-energy-stock-forecasting') return 1;
+          return new Date(b.updated_at) - new Date(a.updated_at);
+        });
+        for (const r of repos) {
+          const li = document.createElement('li');
+          li.innerHTML = `<a href="${r.html_url}" target="_blank" rel="noopener">${r.name}</a>
+                          <div class="desc">${r.description ? r.description : ''}</div>`;
+          ul.appendChild(li);
+        }
+      } catch (err) {
+        ul.textContent = 'Failed to load repositories: ' + err.message;
+      }
+    }
+
+    // Kick off repository fetch
+    loadRepos();
+  </script>
+</body>
+</html>
