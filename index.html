@@ -8,19 +8,14 @@
 </head>
 <body>
   <main class="container">
+    <!-- Simple centered header: avatar + name + LinkedIn (no full-width headline) -->
     <header class="hero" role="banner">
-      <!-- Use a real <img> for the hero so browsers load it reliably -->
-      <img class="hero-img" src="assets/header.jpg" alt="Grace (Zu Zu Cho) Oo" />
-
-      <div class="hero-overlay">
-        <div class="hero-content">
-          <!-- Cushion-shaped avatar (not circular) -->
-          <img class="avatar" src="assets/avatar.jpg" alt="Grace (Zu Zu Cho) Oo" />
-          <div class="hero-text">
-            <h1 class="name">Grace (Zu Zu Cho) Oo</h1>
-            <p class="tagline">Software &amp; Machine Learning Engineer</p>
-            <p class="social"><a id="linkedin-link" href="https://www.linkedin.com/in/zuzuchooo" target="_blank" rel="noopener">LinkedIn</a></p>
-          </div>
+      <div class="hero-content center">
+        <img class="avatar" src="assets/avatar.jpeg" alt="Grace (Zu Zu Cho) Oo" onerror="this.style.display='none'" />
+        <div class="hero-text">
+          <h1 class="name">Grace (Zu Zu Cho) Oo</h1>
+          <p class="tagline">Software &amp; Machine Learning Engineer</p>
+          <p class="social"><a id="linkedin-link" href="https://www.linkedin.com/in/zuzuchooo" target="_blank" rel="noopener">LinkedIn</a></p>
         </div>
       </div>
     </header>
@@ -44,9 +39,7 @@
   </main>
 
   <script>
-    // Default username (repository owner)
     const username = "Gracezu";
-    // Names to hide from the repo list (lowercase)
     const hiddenRepos = ['gracezu.github.io', 'js-fizzbuzz-lagcc-001'];
 
     async function loadRepos() {
@@ -56,25 +49,12 @@
         const res = await fetch(`https://api.github.com/users/${username}/repos?per_page=200&sort=updated`);
         if (!res.ok) throw new Error('GitHub API error: ' + res.status);
         const repos = await res.json();
-        if (!Array.isArray(repos) || repos.length === 0) {
-          ul.textContent = 'No public repositories found.';
-          return;
-        }
-        // Filter out the hidden repositories by name (case-insensitive)
         const filtered = repos.filter(r => !hiddenRepos.includes(r.name.toLowerCase()));
-
-        if (filtered.length === 0) {
-          ul.textContent = 'No public repositories to display.';
-          return;
-        }
-
-        // Prioritize tech-energy-stock-forecasting
         filtered.sort((a,b) => {
           if (a.name === 'tech-energy-stock-forecasting') return -1;
           if (b.name === 'tech-energy-stock-forecasting') return 1;
           return new Date(b.updated_at) - new Date(a.updated_at);
         });
-
         ul.innerHTML = '';
         for (const r of filtered) {
           const li = document.createElement('li');
@@ -87,7 +67,6 @@
       }
     }
 
-    // Kick off repository fetch
     loadRepos();
   </script>
 </body>
