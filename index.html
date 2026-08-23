@@ -72,15 +72,25 @@
 
         ul.innerHTML = '';
         for (const r of filtered) {
-          // If the repository has a published Pages site, link to that instead of the repo
-          let linkUrl = r.html_url;
-          if (r.name && r.name.toLowerCase() === 'tech-energy-stock-forecasting') {
-            linkUrl = `https://${username.toLowerCase()}.github.io/${r.name}/`;
-          }
+          const pageUrl = `https://${username.toLowerCase()}.github.io/${r.name}/`;
+          const repoUrl = r.html_url;
 
           const li = document.createElement('li');
-          li.innerHTML = `<a href="${linkUrl}" target="_blank" rel="noopener">${r.name}</a>
-                          <div class="desc">${r.description ? r.description : ''}</div>`;
+
+          if (r.name && r.name.toLowerCase() === 'tech-energy-stock-forecasting') {
+            // For this repo, show a direct Pages link (opens in new tab) and keep the repo link as well
+            li.innerHTML = `
+              <div class="repo-row">
+                <a class="repo-site" href="${pageUrl}" target="_blank" rel="noopener">${r.name} — Live site</a>
+                <span class="sep">|</span>
+                <a class="repo-repo" href="${repoUrl}" target="_blank" rel="noopener">Repository</a>
+                <div class="desc">${r.description ? r.description : ''}</div>
+              </div>`;
+          } else {
+            li.innerHTML = `<a href="${repoUrl}" target="_blank" rel="noopener">${r.name}</a>
+                            <div class="desc">${r.description ? r.description : ''}</div>`;
+          }
+
           ul.appendChild(li);
         }
       } catch (err) {
