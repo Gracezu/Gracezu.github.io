@@ -40,6 +40,7 @@
 
   <script>
     const username = "Gracezu";
+    // Names to hide from the repo list (lowercase)
     const hiddenRepos = ['gracezu.github.io', 'js-fizzbuzz-lagcc-001'];
 
     async function loadRepos() {
@@ -49,16 +50,36 @@
         const res = await fetch(`https://api.github.com/users/${username}/repos?per_page=200&sort=updated`);
         if (!res.ok) throw new Error('GitHub API error: ' + res.status);
         const repos = await res.json();
+        if (!Array.isArray(repos) || repos.length === 0) {
+          ul.textContent = 'No public repositories found.';
+          return;
+        }
+
+        // Filter out hidden repositories by name (case-insensitive)
         const filtered = repos.filter(r => !hiddenRepos.includes(r.name.toLowerCase()));
+
+        if (filtered.length === 0) {
+          ul.textContent = 'No public repositories to display.';
+          return;
+        }
+
+        // Prioritize tech-energy-stock-forecasting
         filtered.sort((a,b) => {
           if (a.name === 'tech-energy-stock-forecasting') return -1;
           if (b.name === 'tech-energy-stock-forecasting') return 1;
           return new Date(b.updated_at) - new Date(a.updated_at);
         });
+
         ul.innerHTML = '';
         for (const r of filtered) {
+          // If the repository has a published Pages site, link to that instead of the repo
+          let linkUrl = r.html_url;
+          if (r.name && r.name.toLowerCase() === 'tech-energy-stock-forecasting') {
+            linkUrl = `https://${username.toLowerCase()}.github.io/${r.name}/`;
+          }
+
           const li = document.createElement('li');
-          li.innerHTML = `<a href="${r.html_url}" target="_blank" rel="noopener">${r.name}</a>
+          li.innerHTML = `<a href="${linkUrl}" target="_blank" rel="noopener">${r.name}</a>
                           <div class="desc">${r.description ? r.description : ''}</div>`;
           ul.appendChild(li);
         }
