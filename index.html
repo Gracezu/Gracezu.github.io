@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Grace (Zu Zu Cho) Oo — Projects</title>
   <link rel="stylesheet" href="styles.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta.js/0.5.24/vanta.net.min.js"></script>
 </head>
 <body>
   <div id="vanta-background"></div>
@@ -41,7 +39,21 @@
     </footer>
   </main>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta.js/0.5.24/vanta.net.min.js"></script>
   <script>
+    // Initialize Vanta NET background FIRST
+    VANTA.NET({
+      el: "#vanta-background",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200.00,
+      minWidth: 200.00,
+      scale: 1.00,
+      scaleMobile: 1.00
+    });
+
     const username = "Gracezu";
     // Names to hide from the repo list (lowercase)
     const hiddenRepos = ['gracezu.github.io', 'js-fizzbuzz-lagcc-001'];
@@ -102,18 +114,6 @@
     }
 
     loadRepos();
-
-    // Initialize Vanta NET background
-    VANTA.NET({
-      el: "#vanta-background",
-      mouseControls: true,
-      touchControls: true,
-      gyroControls: false,
-      minHeight: 200.00,
-      minWidth: 200.00,
-      scale: 1.00,
-      scaleMobile: 1.00
-    });
   </script>
 </body>
 </html>
