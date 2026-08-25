@@ -86,9 +86,18 @@
         repos.forEach(r => {
           const li = document.createElement('li');
           const a = document.createElement('a');
-          a.href = r.html_url;
+
+          // special-case: point this repo to the hosted site instead of GitHub
+          let href = r.html_url;
+          let target = '_blank';
+          if (r.name === 'tech-energy-stock-forecasting') {
+            href = 'https://gracezu.github.io/tech-energy-stock-forecasting/';
+            target = '_self'; // open in same tab (go directly)
+          }
+
+          a.href = href;
           a.textContent = r.name;
-          a.target = '_blank';
+          a.target = target;
           a.rel = 'noopener noreferrer';
           a.className = 'repo-name external';
           li.appendChild(a);
