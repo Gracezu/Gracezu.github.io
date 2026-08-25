@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gracezu — Repositories</title>
+  <title>Gracezu — Projects</title>
   <style>
     :root{
       --bg: #000000;
@@ -18,6 +18,7 @@
     header{ display:flex; align-items:center; gap:1rem; margin-bottom:1rem; }
     .avatar{ width:96px; height:96px; border-radius:50%; object-fit:cover; border:3px solid rgba(255,255,255,0.06); }
     h1 { margin:0; color:var(--accent); font-weight:700; }
+    .section-title { margin:6px 0 0; color:var(--fg); font-weight:700; font-size:1rem; }
     #summary { color:var(--muted); margin-top:.35rem; }
     #repos { list-style: none; padding: 0; margin: 1rem 0; }
     #repos li { border-bottom: 1px solid var(--item-border); padding: .75rem 0; }
@@ -34,8 +35,9 @@
   <header>
     <img src="assets/avt.jpeg" alt="Gracezu avatar" class="avatar" onerror="this.style.display='none'" />
     <div>
-      <h1>Gracezu — Repositories</h1>
-      <p id="summary">Loading repositories…</p>
+      <h1>Gracezu</h1>
+      <div class="section-title">Projects</div>
+      <p id="summary">Loading projects…</p>
     </div>
   </header>
 
@@ -77,12 +79,12 @@
 
       function render(repos) {
         if (!repos || repos.length === 0) {
-          summaryEl.textContent = 'No repositories found.';
+          summaryEl.textContent = 'No projects found.';
           return;
         }
         // remove the repository that is the Pages site itself from the count & list
         const filtered = repos.filter(r => r.name.toLowerCase() !== 'gracezu.github.io');
-        summaryEl.textContent = `Showing ${filtered.length} public repositories.`;
+        summaryEl.textContent = `Showing ${filtered.length} public projects.`;
         // sort by updated_at desc
         filtered.sort((a,b) => new Date(b.updated_at) - new Date(a.updated_at));
         filtered.forEach(r => {
