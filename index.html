@@ -18,9 +18,13 @@
     header{ display:flex; align-items:center; gap:1rem; margin-bottom:1rem; }
     .avatar{ width:96px; height:96px; border-radius:50%; object-fit:cover; border:3px solid rgba(255,255,255,0.06); }
     h1 { margin:0; color:var(--accent); font-weight:700; }
+    .header-info { display: flex; flex-direction: column; gap: .25rem; }
+    .linkedin-link { color:var(--accent); text-decoration:none; font-size:.95rem; }
+    .linkedin-link:hover { text-decoration:underline; }
+    .projects-title { color:var(--fg); font-weight:700; font-size:1.4rem; margin: 1.5rem 0 1rem 0; }
     .section-title { margin:6px 0 0; color:var(--fg); font-weight:700; font-size:1rem; }
     #summary { color:var(--muted); margin-top:.35rem; }
-    #repos { list-style: none; padding: 0; margin: 1rem 0; }
+    #repos { list-style: none; padding: 0; margin: 0; }
     #repos li { border-bottom: 1px solid var(--item-border); padding: .75rem 0; }
     #repos a.repo-name { color:var(--accent); font-weight:800; text-decoration:none; font-size:1.05rem; }
     #repos a.repo-name:hover { text-decoration:underline; }
@@ -33,14 +37,14 @@
 </head>
 <body>
   <header>
-    <img src="assets/avt.jpeg" alt="Gracezu avatar" class="avatar" onerror="this.style.display='none'" />
-    <div>
-      <h1>Gracezu</h1>
-      <div class="section-title">Projects</div>
-      <p id="summary">Loading projects…</p>
+    <img src="assets/avt.jpeg" alt="Grace avatar" class="avatar" onerror="this.style.display='none'" />
+    <div class="header-info">
+      <h1>Grace (Zu Zu Cho) Oo</h1>
+      <a href="https://www.linkedin.com/in/zuzuchooo" class="linkedin-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
     </div>
   </header>
 
+  <div class="projects-title">Projects</div>
   <ul id="repos" aria-live="polite"></ul>
   <div id="error" class="error" role="alert" hidden></div>
 
@@ -49,7 +53,6 @@
       const username = 'gracezu';
       const perPage = 100;
       const reposEl = document.getElementById('repos');
-      const summaryEl = document.getElementById('summary');
       const errorEl = document.getElementById('error');
 
       async function fetchAllRepos() {
@@ -79,12 +82,10 @@
 
       function render(repos) {
         if (!repos || repos.length === 0) {
-          summaryEl.textContent = 'No projects found.';
           return;
         }
         // remove the repository that is the Pages site itself from the count & list
         const filtered = repos.filter(r => r.name.toLowerCase() !== 'gracezu.github.io');
-        summaryEl.textContent = `Showing ${filtered.length} public projects.`;
         // sort by updated_at desc
         filtered.sort((a,b) => new Date(b.updated_at) - new Date(a.updated_at));
         filtered.forEach(r => {
@@ -135,7 +136,6 @@
           } else {
             errorEl.textContent = err.message;
           }
-          summaryEl.textContent = '';
         }
       }
 
