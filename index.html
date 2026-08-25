@@ -80,11 +80,14 @@
           summaryEl.textContent = 'No repositories found.';
           return;
         }
-        summaryEl.textContent = `Showing ${repos.length} public repositories.`;
+        // remove the repository that is the Pages site itself from the count & list
+        const filtered = repos.filter(r => r.name.toLowerCase() !== 'gracezu.github.io');
+        summaryEl.textContent = `Showing ${filtered.length} public repositories.`;
         // sort by updated_at desc
-        repos.sort((a,b) => new Date(b.updated_at) - new Date(a.updated_at));
-        repos.forEach(r => {
+        filtered.sort((a,b) => new Date(b.updated_at) - new Date(a.updated_at));
+        filtered.forEach(r => {
           const li = document.createElement('li');
+
           const a = document.createElement('a');
 
           // special-case: point this repo to the hosted site instead of GitHub
@@ -106,10 +109,13 @@
           meta.className = 'meta';
           const parts = [];
           if (r.description) parts.push(r.description);
-          parts.push(`★ ${r.stargazers_count}`);
+          // only show star count when > 0
+          if (r.stargazers_count && r.stargazers_count > 0) {
+            parts.push(`★ ${r.stargazers_count}`);
+          }
           if (r.language) parts.push(r.language);
           meta.textContent = parts.join(' · ');
-          li.appendChild(meta);
+          if (meta.textContent) li.appendChild(meta);
 
           reposEl.appendChild(li);
         });
