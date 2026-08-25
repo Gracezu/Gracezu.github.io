@@ -14,14 +14,26 @@
       --error: #ff6f9b;
     }
     html,body{height:100%;}
-    body { background:var(--bg); color:var(--fg); font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial; max-width: 900px; margin: 2rem auto; padding: 1rem; }
     
-    /* Forces your content to stay above the Vanta background */
-    body > header, 
-    body > div, 
-    body > ul {
-      position: relative;
-      z-index: 1;
+    /* The body is now transparent so the background shows through, 
+       but still keeps your 900px content width */
+    body { 
+      background: transparent; 
+      color: var(--fg); 
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial; 
+      max-width: 900px; 
+      margin: 2rem auto; 
+      padding: 1rem; 
+    }
+    
+    /* This creates a fixed, full-screen container for Vanta */
+    #vanta-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
     }
 
     header{ display:flex; align-items:center; gap:1rem; margin-bottom:1rem; }
@@ -45,6 +57,9 @@
   </style>
 </head>
 <body>
+  <!-- Full screen background element for Vanta -->
+  <div id="vanta-bg"></div>
+
   <header>
     <img src="assets/avt.jpeg" alt="Grace avatar" class="avatar" onerror="this.style.display='none'" />
     <div class="header-info">
@@ -79,7 +94,6 @@
 
           const link = res.headers.get('link');
           if (link) {
-            // find rel="next" link if present
             const match = link.match(/<([^>]+)>;\s*rel="next"/);
             url = match ? match[1] : null;
           } else {
@@ -93,21 +107,18 @@
         if (!repos || repos.length === 0) {
           return;
         }
-        // remove the repository that is the Pages site itself from the count & list
         const filtered = repos.filter(r => r.name.toLowerCase() !== 'gracezu.github.io');
-        // sort by updated_at desc
         filtered.sort((a,b) => new Date(b.updated_at) - new Date(a.updated_at));
         filtered.forEach(r => {
           const li = document.createElement('li');
 
           const a = document.createElement('a');
 
-          // special-case: point this repo to the hosted site instead of GitHub
           let href = r.html_url;
           let target = '_blank';
           if (r.name === 'tech-energy-stock-forecasting') {
             href = 'https://gracezu.github.io/tech-energy-stock-forecasting/';
-            target = '_self'; // open in same tab (go directly)
+            target = '_self'; 
           }
 
           a.href = href;
@@ -121,7 +132,6 @@
           meta.className = 'meta';
           const parts = [];
           if (r.description) parts.push(r.description);
-          // only show star count when > 0
           if (r.stargazers_count && r.stargazers_count > 0) {
             parts.push(`★ ${r.stargazers_count}`);
           }
@@ -150,17 +160,17 @@
 
       main();
     })();
-  </script> <!-- THIS IS THE TAG THAT WAS MISSING -->
+  </script> 
 
   <!-- Load Three.js (Required for Vanta Net) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <!-- Load Vanta.js Net Effect -->
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
   
-  <!-- Initialize Vanta with your specific URL parameters -->
+  <!-- Initialize Vanta targeting the new background div -->
   <script>
     VANTA.NET({
-      el: "body", // Applies the background to the entire page
+      el: "#vanta-bg", // Now targets the fixed background div instead of body
       mouseControls: true,
       touchControls: true,
       gyroControls: false,
@@ -168,8 +178,8 @@
       minWidth: 200.00,
       scale: 1.00,
       scaleMobile: 1.00,
-      color: 0xff3f81,           // Hex for 16727937
-      backgroundColor: 0x23153c, // Hex for 2299196
+      color: 0xff3f81,           
+      backgroundColor: 0x23153c, 
       points: 10.00,
       maxDistance: 20.00,
       spacing: 15.00,
