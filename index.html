@@ -1,110 +1,105 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Grace (Zu Zu Cho) Oo — Projects</title>
-<link rel="stylesheet" href="styles.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gracezu — Repositories</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial; max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+    h1 { margin-bottom: .5rem; }
+    #repos { list-style: none; padding: 0; margin: 1rem 0; }
+    #repos li { border-bottom: 1px solid #eee; padding: .75rem 0; }
+    .meta { color: #666; font-size: .9rem; margin-top: .35rem; }
+    .error { color: #a00; margin-top: 1rem; }
+  </style>
 </head>
 <body>
-<main class="container">
-<!-- Simple centered header: avatar + name + LinkedIn (no full-width headline) -->
-<header class="hero" role="banner">
-<div class="hero-content center">
-<img class="avatar" src="assets/avt.jpeg" alt="Grace (Zu Zu Cho) Oo" onerror="this.style.display='none'" />
-<div class="hero-text">
-<h1 class="name">Grace (Zu Zu Cho) Oo</h1>
-<p class="tagline">Software &amp; Machine Learning Engineer</p>
-<p class="social"><a id="linkedin-link" href="https://www.linkedin.com/in/zuzuchooo" target="_blank" rel="noopener">LinkedIn</a></p>
-</div>
-</div>
-</header>
+  <h1>Repositories — gracezu</h1>
+  <p id="summary">Loading repositories…</p>
+  <ul id="repos" aria-live="polite"></ul>
+  <div id="error" class="error" role="alert" hidden></div>
 
-<section class="about">
-<h2>About</h2>
-<p>
-I’m a software and machine learning engineer who loves turning raw, chaotic data into sharp, high-performing intelligent models. Nothing gets me quite as pumped as cracking complex algorithms, training scalable architectures, and watching a freshly tuned model successfully accomplish accuracy. Whether I'm building end-to-end ML pipelines or engineering elegant software under the hood, I live for the process of transforming big ideas into clean, impactful tech. I’m always hunting for the next big challenge, the next tricky dataset, and new ways to push code to its absolute limit. Let’s build something incredible.
-</p>
-</section>
+  <script>
+    (function () {
+      const username = 'gracezu';
+      const perPage = 100;
+      const reposEl = document.getElementById('repos');
+      const summaryEl = document.getElementById('summary');
+      const errorEl = document.getElementById('error');
 
-<section id="repos" class="repos">
-<h2>Repositories</h2>
-<p class="muted">Listing public repositories for <strong>Gracezu</strong>. Data fetched from GitHub.</p>
-<ul id="repo-list">Loading repositories…</ul>
-</section>
+      async function fetchAllRepos() {
+        let page = 1;
+        let all = [];
+        let url = `https://api.github.com/users/${username}/repos?per_page=${perPage}&page=${page}`;
+        while (url) {
+          const res = await fetch(url);
+          if (!res.ok) {
+            const msg = `GitHub API error: ${res.status} ${res.statusText}`;
+            throw new Error(msg);
+          }
+          const data = await res.json();
+          all.push(...data);
 
-<footer class="foot">
-<small>Site generated from your public GitHub repositories.</small>
-</footer>
-</main>
-
-<script>
-const username = "Gracezu";
-// Names to hide from the repo list (lowercase)
-const hiddenRepos = ['gracezu.github.io', 'js-fizzbuzz-lagcc-001'];
-
-async function loadRepos() {
-const ul = document.getElementById('repo-list');
-ul.textContent = 'Loading repositories…';
-try {
-const res = await fetch(`https://api.github.com/users/${username}/repos?per_page=200&sort=updated`);
-if (!res.ok) throw new Error('GitHub API error: ' + res.status);
-const repos = await res.json();
-if (!Array.isArray(repos) || repos.length === 0) {
-ul.textContent = 'No public repositories found.';
-return;
-}
-
-// Filter out hidden repositories by name (case-insensitive)
-const filtered = repos.filter(r => !hiddenRepos.includes(r.name.toLowerCase()));
-
-if (filtered.length === 0) {
-ul.textContent = 'No public repositories to display.';
-return;
-}
-
-// Prioritize tech-energy-stock-forecasting
-filtered.sort((a,b) => {
-if (a.name === 'tech-energy-stock-forecasting') return -1;
-if (b.name === 'tech-energy-stock-forecasting') return 1;
-return new Date(b.updated_at) - new Date(a.updated_at);
-});
-
-ul.innerHTML = '';
-for (const r of filtered) {
-          // If the repository has a published Pages site, link to that instead of the repo
-          let linkUrl = r.html_url;
-          const pageUrl = `https://${username.toLowerCase()}.github.io/${r.name}/`;
-          const repoUrl = r.html_url;
-
-          const li = document.createElement('li');
-
-if (r.name && r.name.toLowerCase() === 'tech-energy-stock-forecasting') {
-            linkUrl = `https://${username.toLowerCase()}.github.io/${r.name}/`;
-            // For this repo, show a direct Pages link (opens in new tab) and keep the repo link as well
-            li.innerHTML = `
-              <div class="repo-row">
-                <a class="repo-site" href="${pageUrl}" target="_blank" rel="noopener">${r.name} — Live site</a>
-                <span class="sep">|</span>
-                <a class="repo-repo" href="${repoUrl}" target="_blank" rel="noopener">Repository</a>
-                <div class="desc">${r.description ? r.description : ''}</div>
-              </div>`;
+          const link = res.headers.get('link');
+          if (link) {
+            // find rel="next" link if present
+            const match = link.match(/<([^>]+)>;\s*rel="next"/);
+            url = match ? match[1] : null;
           } else {
-            li.innerHTML = `<a href="${repoUrl}" target="_blank" rel="noopener">${r.name}</a>
-                            <div class="desc">${r.description ? r.description : ''}</div>`;
-}
+            url = null;
+          }
+        }
+        return all;
+      }
 
+      function render(repos) {
+        if (!repos || repos.length === 0) {
+          summaryEl.textContent = 'No repositories found.';
+          return;
+        }
+        summaryEl.textContent = `Showing ${repos.length} public repositories.`;
+        // sort by updated_at desc
+        repos.sort((a,b) => new Date(b.updated_at) - new Date(a.updated_at));
+        repos.forEach(r => {
           const li = document.createElement('li');
-          li.innerHTML = `<a href="${linkUrl}" target="_blank" rel="noopener">${r.name}</a>
-                          <div class="desc">${r.description ? r.description : ''}</div>`;
-ul.appendChild(li);
-}
-} catch (err) {
-ul.textContent = 'Failed to load repositories: ' + err.message;
-}
-}
+          const a = document.createElement('a');
+          a.href = r.html_url;
+          a.textContent = r.name;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          li.appendChild(a);
 
-loadRepos();
-</script>
+          const meta = document.createElement('div');
+          meta.className = 'meta';
+          const parts = [];
+          if (r.description) parts.push(r.description);
+          parts.push(`★ ${r.stargazers_count}`);
+          if (r.language) parts.push(r.language);
+          meta.textContent = parts.join(' · ');
+          li.appendChild(meta);
+
+          reposEl.appendChild(li);
+        });
+      }
+
+      async function main() {
+        try {
+          const repos = await fetchAllRepos();
+          render(repos);
+        } catch (err) {
+          console.error(err);
+          errorEl.hidden = false;
+          if (err.message.includes('403')) {
+            errorEl.textContent = 'API rate limit reached. Try again later or use a server-side approach with authentication.';
+          } else {
+            errorEl.textContent = err.message;
+          }
+          summaryEl.textContent = '';
+        }
+      }
+
+      main();
+    })();
+  </script>
 </body>
 </html>
