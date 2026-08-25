@@ -5,8 +5,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Grace (Zu Zu Cho) Oo — Projects</title>
   <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta.js/0.5.24/vanta.net.min.js"></script>
 </head>
 <body>
+  <div id="vanta-background"></div>
   <main class="container">
     <!-- Simple centered header: avatar + name + LinkedIn (no full-width headline) -->
     <header class="hero" role="banner">
@@ -23,7 +26,7 @@
     <section class="about">
       <h2>About</h2>
       <p>
-        I’m a software and machine learning engineer who loves turning raw, chaotic data into sharp, high-performing intelligent models. Nothing gets me quite as pumped as cracking complex algorithms, training scalable architectures, and watching a freshly tuned model successfully accomplish accuracy. Whether I'm building end-to-end ML pipelines or engineering elegant software under the hood, I live for the process of transforming big ideas into clean, impactful tech. I’m always hunting for the next big challenge, the next tricky dataset, and new ways to push code to its absolute limit. Let’s build something incredible.
+        I'm a software and machine learning engineer who loves turning raw, chaotic data into sharp, high-performing intelligent models. Nothing gets me quite as pumped as cracking complex algorithms and deploying them at scale.
       </p>
     </section>
 
@@ -99,6 +102,18 @@
     }
 
     loadRepos();
+
+    // Initialize Vanta NET background
+    VANTA.NET({
+      el: "#vanta-background",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200.00,
+      minWidth: 200.00,
+      scale: 1.00,
+      scaleMobile: 1.00
+    });
   </script>
 </body>
 </html>
