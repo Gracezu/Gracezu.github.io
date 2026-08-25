@@ -5,17 +5,40 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Gracezu — Repositories</title>
   <style>
-    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial; max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
-    h1 { margin-bottom: .5rem; }
+    :root{
+      --bg: #000000;
+      --fg: #e6e6e6;
+      --muted: #bfbfbf;
+      --accent: #ff66b2; /* pink accent */
+      --item-border: #222222;
+      --error: #ff6f9b;
+    }
+    html,body{height:100%;}
+    body { background:var(--bg); color:var(--fg); font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial; max-width: 900px; margin: 2rem auto; padding: 1rem; }
+    header{ display:flex; align-items:center; gap:1rem; margin-bottom:1rem; }
+    .avatar{ width:96px; height:96px; border-radius:50%; object-fit:cover; border:3px solid rgba(255,255,255,0.06); }
+    h1 { margin:0; color:var(--accent); font-weight:700; }
+    #summary { color:var(--muted); margin-top:.35rem; }
     #repos { list-style: none; padding: 0; margin: 1rem 0; }
-    #repos li { border-bottom: 1px solid #eee; padding: .75rem 0; }
-    .meta { color: #666; font-size: .9rem; margin-top: .35rem; }
-    .error { color: #a00; margin-top: 1rem; }
+    #repos li { border-bottom: 1px solid var(--item-border); padding: .75rem 0; }
+    #repos a.repo-name { color:var(--accent); font-weight:800; text-decoration:none; font-size:1.05rem; }
+    #repos a.repo-name:hover { text-decoration:underline; }
+    .meta { color: var(--muted); font-size: .9rem; margin-top: .35rem; }
+    .error { color: var(--error); margin-top: 1rem; }
+    a.external { color:var(--accent); }
+    /* small responsive tweaks */
+    @media (max-width:480px){ .avatar{ width:72px; height:72px; } }
   </style>
 </head>
 <body>
-  <h1>Repositories — gracezu</h1>
-  <p id="summary">Loading repositories…</p>
+  <header>
+    <img src="avt.jpeg" alt="Gracezu avatar" class="avatar" onerror="this.style.display='none'" />
+    <div>
+      <h1>Gracezu — Repositories</h1>
+      <p id="summary">Loading repositories…</p>
+    </div>
+  </header>
+
   <ul id="repos" aria-live="polite"></ul>
   <div id="error" class="error" role="alert" hidden></div>
 
@@ -67,6 +90,7 @@
           a.textContent = r.name;
           a.target = '_blank';
           a.rel = 'noopener noreferrer';
+          a.className = 'repo-name external';
           li.appendChild(a);
 
           const meta = document.createElement('div');
