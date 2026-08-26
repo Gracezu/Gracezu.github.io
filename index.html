@@ -15,8 +15,6 @@
     }
     html,body{height:100%;}
     
-    /* The body is now transparent so the background shows through, 
-       but still keeps your 900px content width */
     body { 
       background: transparent; 
       color: var(--fg); 
@@ -26,7 +24,6 @@
       padding: 1rem; 
     }
     
-    /* This creates a fixed, full-screen container for Vanta */
     #vanta-bg {
       position: fixed;
       top: 0;
@@ -36,12 +33,19 @@
       z-index: -1;
     }
 
-    header{ display:flex; align-items:center; gap:1rem; margin-bottom:1rem; }
-    .avatar{ width:96px; height:96px; border-radius:50%; object-fit:cover; border:3px solid rgba(255,255,255,0.06); }
+    header{ display:flex; align-items:center; gap:1.5rem; margin-bottom:2rem; }
+    
+    /* Avatar size doubled (192px instead of 96px) */
+    .avatar{ width:192px; height:192px; border-radius:50%; object-fit:cover; border:3px solid rgba(255,255,255,0.06); flex-shrink: 0; }
+    
     h1 { margin:0; color:var(--accent); font-weight:700; }
     .header-info { display: flex; flex-direction: column; gap: .25rem; }
-    .linkedin-link { color:var(--accent); text-decoration:none; font-size:.95rem; }
+    .linkedin-link { color:var(--accent); text-decoration:none; font-size:.95rem; font-weight: bold;}
     .linkedin-link:hover { text-decoration:underline; }
+    
+    /* New styles for the About Me section */
+    .about-me { margin: 0.5rem 0 0 0; color: var(--fg); line-height: 1.6; font-size: 0.95rem; }
+
     .projects-title { color:var(--fg); font-weight:700; font-size:1.4rem; margin: 1.5rem 0 1rem 0; }
     .section-title { margin:6px 0 0; color:var(--fg); font-weight:700; font-size:1rem; }
     #summary { color:var(--muted); margin-top:.35rem; }
@@ -52,8 +56,12 @@
     .meta { color: var(--muted); font-size: .9rem; margin-top: .35rem; }
     .error { color: var(--error); margin-top: 1rem; }
     a.external { color:var(--accent); }
-    /* small responsive tweaks */
-    @media (max-width:480px){ .avatar{ width:72px; height:72px; } }
+    
+    /* Mobile avatar size doubled (144px instead of 72px) and adjusted header layout */
+    @media (max-width:600px){ 
+      header { flex-direction: column; text-align: center; }
+      .avatar{ width:144px; height:144px; } 
+    }
   </style>
 </head>
 <body>
@@ -65,6 +73,7 @@
     <div class="header-info">
       <h1>Grace (Zu Zu Cho) Oo</h1>
       <a href="https://www.linkedin.com/in/zuzuchooo" class="linkedin-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <p class="about-me">I am Grace who specializes in building practical machine learning models, with experience ranging from co-founding a fintech startup to forecasting macroeconomic stock market trends. I work heavily with Python and time-series forecasting to build AI solutions that actually perform in the real world, rather than just class works. When I'm away from my keyboard, you can find me traveling, trying new recipes, or catching live music.</p>
     </div>
   </header>
 
@@ -170,7 +179,7 @@
   <!-- Initialize Vanta targeting the new background div -->
   <script>
     VANTA.NET({
-      el: "#vanta-bg", // Now targets the fixed background div instead of body
+      el: "#vanta-bg", // Targets the fixed background div
       mouseControls: true,
       touchControls: true,
       gyroControls: false,
